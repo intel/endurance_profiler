@@ -379,7 +379,6 @@ function WAFinfo() {
 		_VUsmart_E2=$(get_smart_log "${_nvme_namespace}" 0x41)
 		_VUsmart_E3=$(get_smart_log "${_nvme_namespace}" 0x4d)
 		_VUsmart_E4=$(get_smart_log "${_nvme_namespace}" 0x59)
-		_media_wear_percentage=$(echo "scale=3;${_VUsmart_E2}/1024" | bc -l)
 	
 		echo "Drive                            : ${_market_name} $((_tnvmcap/1000/1000/1000))GB"
 		echo "Serial number                    : ${_serial_number}"
@@ -390,9 +389,20 @@ function WAFinfo() {
 			echo "smart.host_reads                 : Not Available yet"
 			echo "smart.timed_work_load            : less than 60 minutes"
 		else
-			echo "smart.media_wear_percentage      : ${_media_wear_percentage/#./0.}%"
-			echo "smart.host_reads                 : ${_VUsmart_E3}%"
-			echo "smart.timed_work_load            : ${_VUsmart_E4} minutes"
+			if [[ ${_VUsmart_E2} -eq 0 ]] ; then
+				echo "smart.media_wear_percentage      : <0.001%"
+				echo "smart.host_reads                 : ${_VUsmart_E3}%"
+				echo "smart.timed_work_load            : ${_VUsmart_E4} minutes"
+				echo "Drive life                       : smart.media_wear_percentage to small to calculate Drive life"
+			else
+				_media_wear_percentage=$(echo "scale=3;${_VUsmart_E2}/1024" | bc -l)
+				_drive_life_minutes=$(echo "scale=0;${_VUsmart_E4}*100*1024/${_VUsmart_E2}" | bc -l)
+				_drive_life_years=$(echo "scale=3;${_drive_life_minutes}/525600" | bc -l)
+				echo "smart.media_wear_percentage      : ${_media_wear_percentage/#./0.}%"
+				echo "smart.host_reads                 : ${_VUsmart_E3}%"
+				echo "smart.timed_work_load            : ${_VUsmart_E4} minutes"
+				echo "Drive life                       : ${_drive_life_years/#./0.} years (${_drive_life_minutes} minutes)"
+			fi
 		fi
 		return 0
 	else
