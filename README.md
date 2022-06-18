@@ -19,7 +19,7 @@ Stops the *endurance_profiler* service and stop logging the Vendor Unique Smart 
 
 **restart**
 
-Stop and restarts the *endurance_profiler* service.
+Stops and restarts the *endurance_profiler* service.
 
 **status**
 
