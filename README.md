@@ -1,5 +1,5 @@
 # endurance_profiler.sh
-Linux Bash script that reports the Write Amplification Factor (WAF) of a workload over a defined period. 
+Linux Bash script that reports the Write Amplification Factor (WAF) of a workload over a defined period and estimates the Drive Life in years of a new drive under this workload.
 ## Name
 endurance_profiler.sh - Extracting Write Amplification Factor (WAF) on Intel PCIe/NVMe based SSDs.
 ## Synopsis
@@ -79,13 +79,14 @@ It is suggested to run a workload for longer than 1 hour.
 Check the Write Amplification Info:
 ```
 # ./endurance_profiler.sh WAFinfo
-Drive                            : Intel(R) SSD DC P5316   Series 15360GB
+Drive                            : Intel(R) SSD DC P5316   Series 15362GB
 Serial number                    : PHAC121300TN15PHGN
-Device                           : /dev/nvme1n1
-smart.write_amplification_factor : 3.14
+Device                           : /dev/nvme3n1
+smart.write_amplification_factor : 2.34
 smart.media_wear_percentage      : 0.030%
-smart.host_reads                 : 19%
-smart.timed_work_load            : 102 minutes
+smart.host_reads                 : 81%
+smart.timed_work_load            : 653 minutes
+Drive life                       : 4.007 years (2106451 minutes)
 ```
 Stop the service:
 ```
